@@ -8,7 +8,7 @@
     
     <title>acoustics.bands &mdash; acoustics 0.0 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -23,11 +23,12 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="acoustics" href="../acoustics.html" /> 
+    <link rel="up" title="Module code" href="../index.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,49 +37,29 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../acoustics.html" accesskey="U">acoustics</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for acoustics.bands</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Bands</span>
 <span class="sd">=====</span>
 
-
-
 <span class="sd">&quot;&quot;&quot;</span>
-
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-
-<span class="kn">from</span> <span class="nn">acoustics.utils</span> <span class="kn">import</span> <span class="n">esum</span>
-
-<span class="n">OCTAVE_CENTER_FREQUENCIES</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">16</span><span class="p">,</span> <span class="mf">31.5</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span>
-                             <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">8000</span><span class="p">,</span> <span class="mi">16000</span><span class="p">])</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Preferred 1/1-octave band center frequencies.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="n">THIRD_OCTAVE_CENTER_FREQUENCIES</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">12.5</span><span class="p">,</span>     <span class="mi">16</span><span class="p">,</span>    <span class="mi">20</span><span class="p">,</span>   <span class="mi">25</span><span class="p">,</span> <span class="mf">31.5</span><span class="p">,</span>    <span class="mi">40</span><span class="p">,</span>
-                                <span class="mi">50</span><span class="p">,</span>       <span class="mi">63</span><span class="p">,</span>    <span class="mi">80</span><span class="p">,</span>  <span class="mi">100</span><span class="p">,</span>  <span class="mi">125</span><span class="p">,</span>   <span class="mi">160</span><span class="p">,</span>
-                                <span class="mi">200</span><span class="p">,</span>     <span class="mi">250</span><span class="p">,</span>   <span class="mi">315</span><span class="p">,</span>  <span class="mi">400</span><span class="p">,</span>  <span class="mi">500</span><span class="p">,</span>   <span class="mi">630</span><span class="p">,</span>
-                                <span class="mi">800</span><span class="p">,</span>    <span class="mi">1000</span><span class="p">,</span>  <span class="mi">1250</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span>  <span class="mi">2500</span><span class="p">,</span>
-                                <span class="mi">3150</span><span class="p">,</span>   <span class="mi">4000</span><span class="p">,</span>  <span class="mi">5000</span><span class="p">,</span> <span class="mi">6300</span><span class="p">,</span> <span class="mi">8000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span>
-                                <span class="mi">12500</span><span class="p">,</span> <span class="mi">16000</span><span class="p">,</span> <span class="mi">20000</span><span class="p">])</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Preferred 1/3-octave band center frequencies.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
+<span class="kn">from</span> <span class="nn">acoustics.decibel</span> <span class="kn">import</span> <span class="n">dbsum</span>
+<span class="kn">from</span> <span class="nn">acoustics.standards.iec_61672_1_2013</span> <span class="kn">import</span> <span class="n">NOMINAL_OCTAVE_CENTER_FREQUENCIES</span> <span class="k">as</span> <span class="n">OCTAVE_CENTER_FREQUENCIES</span>
+<span class="kn">from</span> <span class="nn">acoustics.standards.iec_61672_1_2013</span> <span class="kn">import</span> <span class="n">NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES</span> <span class="k">as</span> <span class="n">THIRD_OCTAVE_CENTER_FREQUENCIES</span>
 
 <div class="viewcode-block" id="octave"><a class="viewcode-back" href="../../bands.html#acoustics.bands.octave">[docs]</a><span class="k">def</span> <span class="nf">octave</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -171,7 +152,7 @@
     <span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">//</span> <span class="mi">3</span>
     <span class="n">shape</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">axis</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">esum</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">dbsum</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
 </div>
 <span class="k">def</span> <span class="nf">_check_band_type</span><span class="p">(</span><span class="n">freqs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check if an array contains octave or third octave bands values sorted</span>
@@ -210,9 +191,9 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -229,7 +210,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -238,14 +219,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../acoustics.html" >acoustics</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

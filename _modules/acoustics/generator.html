@@ -8,7 +8,7 @@
     
     <title>acoustics.generator &mdash; acoustics 0.0 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -23,11 +23,12 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="acoustics" href="../acoustics.html" /> 
+    <link rel="up" title="Module code" href="../index.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,16 +37,15 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../acoustics.html" accesskey="U">acoustics</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for acoustics.generator</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -74,14 +74,26 @@
 <span class="sd">Violet +9 dB +6 dB</span>
 <span class="sd">====== ===== =============</span>
 
+<span class="sd">All colors</span>
+<span class="sd">----------</span>
+
+<span class="sd">.. autofunction:: noise</span>
+<span class="sd">.. autofunction:: noise_generator</span>
+
+<span class="sd">Per color</span>
+<span class="sd">---------</span>
+
 <span class="sd">.. autofunction:: white</span>
 <span class="sd">.. autofunction:: pink</span>
 <span class="sd">.. autofunction:: blue</span>
 <span class="sd">.. autofunction:: brown</span>
 <span class="sd">.. autofunction:: violet</span>
 
-<span class="sd">Waveforms</span>
-<span class="sd">*********</span>
+
+<span class="sd">Other</span>
+<span class="sd">*****</span>
+
+<span class="sd">.. autofunction:: heaviside</span>
 
 <span class="sd">For related functions, check :mod:`scipy.signal`.</span>
 
@@ -93,7 +105,27 @@
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="c">#import scipy.signal.sawtooth</span>
 
-            
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pyfftw.interfaces.numpy_fft</span> <span class="kn">import</span> <span class="n">rfft</span><span class="p">,</span> <span class="n">irfft</span>       <span class="c"># Performs much better than numpy&#39;s fftpack</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>                                    <span class="c"># Use monkey-patching np.fft perhaps instead?</span>
+    <span class="kn">from</span> <span class="nn">numpy.fft</span> <span class="kn">import</span> <span class="n">rfft</span><span class="p">,</span> <span class="n">irfft</span>
+
+<span class="kn">from</span> <span class="nn">.signal</span> <span class="kn">import</span> <span class="n">normalize</span>
+
+
+<div class="viewcode-block" id="noise"><a class="viewcode-back" href="../../generator.html#acoustics.generator.noise">[docs]</a><span class="k">def</span> <span class="nf">noise</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;white&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Noise generator.</span>
+<span class="sd">    </span>
+<span class="sd">    :param N: Amount of samples.</span>
+<span class="sd">    :param color: Color of noise.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_noise_generators</span><span class="p">[</span><span class="n">color</span><span class="p">](</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Incorrect color.&quot;</span><span class="p">)</span>
+
+</div>
 <div class="viewcode-block" id="white"><a class="viewcode-back" href="../../generator.html#acoustics.generator.white">[docs]</a><span class="k">def</span> <span class="nf">white</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    White noise.</span>
@@ -105,6 +137,7 @@
 <span class="sd">    and therefore increases with 3 dB per octave.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="pink"><a class="viewcode-back" href="../../generator.html#acoustics.generator.pink">[docs]</a><span class="k">def</span> <span class="nf">pink</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -120,13 +153,17 @@
     <span class="c">#b = np.array([0.049922035, -0.095993537, 0.050612699, -0.004408786])</span>
     <span class="c">#a = np.array([1, -2.494956002, 2.017265875, -0.522189400])</span>
     <span class="c">#return lfilter(B, A, np.random.randn(N))</span>
-    
     <span class="c"># Another way would be using the FFT</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="c">#x = np.random.randn(N)</span>
+    <span class="c">#X = rfft(x) / N  </span>
+    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span><span class="o">%</span><span class="mi">2</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span>
     <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">+</span><span class="mf">1.</span><span class="p">)</span> <span class="c"># +1 to avoid divide by zero</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">/</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">N</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">y</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">/</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+    <span class="k">if</span> <span class="n">uneven</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="blue"><a class="viewcode-back" href="../../generator.html#acoustics.generator.blue">[docs]</a><span class="k">def</span> <span class="nf">blue</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -138,11 +175,13 @@
 <span class="sd">    Power density increases with 3 dB per octave. </span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span><span class="o">%</span><span class="mi">2</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span>
     <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span><span class="c"># Filter</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">*</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">N</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">y</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">*</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+    <span class="k">if</span> <span class="n">uneven</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
 </div>
 <div class="viewcode-block" id="brown"><a class="viewcode-back" href="../../generator.html#acoustics.generator.brown">[docs]</a><span class="k">def</span> <span class="nf">brown</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
@@ -155,11 +194,14 @@
 <span class="sd">    Power density decreases with 6 dB per octave. </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span><span class="o">%</span><span class="mi">2</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span>
     <span class="n">S</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="c"># Filter</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">/</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">N</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">y</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">/</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+    <span class="k">if</span> <span class="n">uneven</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="violet"><a class="viewcode-back" href="../../generator.html#acoustics.generator.violet">[docs]</a><span class="k">def</span> <span class="nf">violet</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -171,62 +213,56 @@
 <span class="sd">    Power density increases with +6 dB per octave. </span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span><span class="o">%</span><span class="mi">2</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span>
     <span class="n">S</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span><span class="c"># Filter</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">*</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">N</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">y</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">*</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+    <span class="k">if</span> <span class="n">uneven</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+</div>
+<span class="n">_noise_generators</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;white&#39;</span>  <span class="p">:</span> <span class="n">white</span><span class="p">,</span>
+    <span class="s">&#39;pink&#39;</span>   <span class="p">:</span> <span class="n">pink</span><span class="p">,</span>
+    <span class="s">&#39;blue&#39;</span>   <span class="p">:</span> <span class="n">blue</span><span class="p">,</span>
+    <span class="s">&#39;brown&#39;</span>  <span class="p">:</span> <span class="n">brown</span><span class="p">,</span>
+    <span class="s">&#39;violet&#39;</span> <span class="p">:</span> <span class="n">violet</span><span class="p">,</span>
+    <span class="p">}</span>
 
 
-<span class="c">#def sawtooth(f, fs, width=1):</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#Sawtooth. Return f sawteeth per second.</span>
+<div class="viewcode-block" id="noise_generator"><a class="viewcode-back" href="../../generator.html#acoustics.generator.noise_generator">[docs]</a><span class="k">def</span> <span class="nf">noise_generator</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">44100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;white&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Noise generator. </span>
+
+<span class="sd">    :param N: Amount of unique samples to generate.</span>
+<span class="sd">    :param color: Color of noise.</span>
+<span class="sd">     </span>
+<span class="sd">    Generate `N` amount of unique samples and cycle over these samples.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c">#yield from itertools.cycle(noise(N, color)) # Python 3.3</span>
+    <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">(</span><span class="n">noise</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">color</span><span class="p">)):</span>
+        <span class="k">yield</span> <span class="n">sample</span>
     
+</div>
+<div class="viewcode-block" id="heaviside"><a class="viewcode-back" href="../../generator.html#acoustics.generator.heaviside">[docs]</a><span class="k">def</span> <span class="nf">heaviside</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Heaviside.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns the value 0 for `x &lt; 0`, 1 for `x &gt; 0`, and 1/2 for `x = 0`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
     
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#t = np.arange()</span>
-
-<span class="c">#def white_generator(N=44100):</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#White noise generator. Repeat every ``N`` samples.</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#return itertools.cycle(white(N))</span>
-
-<span class="c">#def pink_generator(N=44100):</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#Pink noise generator. Repeat every ``N`` samples.</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#return itertools.cycle(white(N))</span>
-
-<span class="c">#def brown_generator(N=44100):</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#Brown noise generator. Repeat every ``N`` samples.</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#return itertools.cycle(brown(N))</span>
-
-<span class="c">#def generate(iterable):</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#Return indefinetely long generator of iterable.</span>
-    
-    <span class="c">#.. note:: :func:`itertools.cycle`</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#return itertools.cycle(iterable)</span>
-
-
-<span class="c">#def sawtooth_generator(f, fs=44100):</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#Sawtooth generator. Repeat....</span>
-    <span class="c">#&quot;&quot;&quot;</span>
-    <span class="c">#raise NotImplementedError</span>
-    </div>
+</div>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;noise&#39;</span><span class="p">,</span> <span class="s">&#39;white&#39;</span><span class="p">,</span> <span class="s">&#39;pink&#39;</span><span class="p">,</span> <span class="s">&#39;blue&#39;</span><span class="p">,</span> <span class="s">&#39;brown&#39;</span><span class="p">,</span> <span class="s">&#39;violet&#39;</span><span class="p">,</span>
+           <span class="s">&#39;noise_generator&#39;</span><span class="p">,</span> <span class="s">&#39;heaviside&#39;</span><span class="p">]</span>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -243,7 +279,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -252,14 +288,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../acoustics.html" >acoustics</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

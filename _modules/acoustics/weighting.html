@@ -8,7 +8,7 @@
     
     <title>acoustics.weighting &mdash; acoustics 0.0 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -23,11 +23,12 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="acoustics" href="../acoustics.html" /> 
+    <link rel="up" title="Module code" href="../index.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,16 +37,15 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../acoustics.html" accesskey="U">acoustics</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for acoustics.weighting</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -143,38 +143,62 @@
     <span class="k">return</span> <span class="n">freq_weightings</span><span class="p">[</span><span class="n">low</span><span class="p">:</span> <span class="n">high</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">z2a</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+<div class="viewcode-block" id="z2a"><a class="viewcode-back" href="../../weighting.html#acoustics.weighting.z2a">[docs]</a><span class="k">def</span> <span class="nf">z2a</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply A-weighting to Z-weighted signal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">levels</span> <span class="o">+</span> <span class="n">a_weighting</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
 
-
-<span class="k">def</span> <span class="nf">a2z</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="a2z"><a class="viewcode-back" href="../../weighting.html#acoustics.weighting.a2z">[docs]</a><span class="k">def</span> <span class="nf">a2z</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove A-weighting from A-weighted signal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">levels</span> <span class="o">-</span> <span class="n">a_weighting</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
 
-
-<span class="k">def</span> <span class="nf">z2c</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="z2c"><a class="viewcode-back" href="../../weighting.html#acoustics.weighting.z2c">[docs]</a><span class="k">def</span> <span class="nf">z2c</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply C-weighting to Z-weighted signal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">levels</span> <span class="o">+</span> <span class="n">c_weighting</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
 
-
-<span class="k">def</span> <span class="nf">c2z</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="c2z"><a class="viewcode-back" href="../../weighting.html#acoustics.weighting.c2z">[docs]</a><span class="k">def</span> <span class="nf">c2z</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove C-weighting from C-weighted signal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">levels</span> <span class="o">-</span> <span class="n">c_weighting</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
 
-
-<span class="k">def</span> <span class="nf">a2c</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="a2c"><a class="viewcode-back" href="../../weighting.html#acoustics.weighting.a2c">[docs]</a><span class="k">def</span> <span class="nf">a2c</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Go from A-weighted to C-weighted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dB</span> <span class="o">=</span> <span class="n">a2z</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">z2c</span><span class="p">(</span><span class="n">dB</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
 
-
-<span class="k">def</span> <span class="nf">c2a</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="c2a"><a class="viewcode-back" href="../../weighting.html#acoustics.weighting.c2a">[docs]</a><span class="k">def</span> <span class="nf">c2a</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Go from C-weighted to A-weighted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dB</span> <span class="o">=</span> <span class="n">c2z</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">z2a</span><span class="p">(</span><span class="n">dB</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
+</div>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;THIRD_OCTAVE_A_WEIGHTING&#39;</span><span class="p">,</span> 
+           <span class="s">&#39;THIRD_OCTAVE_C_WEIGHTING&#39;</span><span class="p">,</span> 
+           <span class="s">&#39;a_weighting&#39;</span><span class="p">,</span>
+           <span class="s">&#39;c_weighting&#39;</span><span class="p">,</span>
+           <span class="s">&#39;z2a&#39;</span><span class="p">,</span>
+           <span class="s">&#39;a2z&#39;</span><span class="p">,</span>
+           <span class="s">&#39;z2c&#39;</span><span class="p">,</span>
+           <span class="s">&#39;c2z&#39;</span><span class="p">,</span>
+           <span class="s">&#39;a2c&#39;</span><span class="p">,</span>
+           <span class="s">&#39;c2a&#39;</span><span class="p">,</span>
+           <span class="p">]</span>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -191,7 +215,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -200,14 +224,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-          <li><a href="../acoustics.html" >acoustics</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>
