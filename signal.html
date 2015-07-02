@@ -65,8 +65,8 @@
 <em class="property">class </em><code class="descclassname">acoustics.signal.</code><code class="descname">Filterbank</code><span class="sig-paren">(</span><em>frequencies</em>, <em>sample_frequency=44100</em>, <em>order=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/signal.html#Filterbank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Filterbank" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/3/library/functions.html#object" title="(in Python v3.4)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Fractional-Octave filter bank.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
 <p class="last">For high frequencies the filter coefficients are wrong for low frequencies. Therefore, to improve the response for lower frequencies the signal should be downsampled. Currently, there is no easy way to do so within the Filterbank.</p>
 </div>
 <dl class="method">
@@ -166,7 +166,11 @@ Returns a list consisting of a filtered signal per filter.</p>
 </tr>
 </tbody>
 </table>
-<p>A Butterworth filter (see <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v0.15.1)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.butter()</span></code></a>) is used.</p>
+<p>A Butterworth filter is used.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v0.15.1)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.butter()</span></code></a>.</p>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -214,7 +218,7 @@ Returns a list consisting of a filtered signal per filter.</p>
 </table>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#acoustics.signal.bandpass_filter" title="acoustics.signal.bandpass_filter"><code class="xref py py-func docutils literal"><span class="pre">bandpass_filter()</span></code></a></p>
+<p class="last"><a class="reference internal" href="#acoustics.signal.bandpass_filter" title="acoustics.signal.bandpass_filter"><code class="xref py py-func docutils literal"><span class="pre">bandpass_filter()</span></code></a> for the filter that is used.</p>
 </div>
 </dd></dl>
 
@@ -236,7 +240,11 @@ Returns a list consisting of a filtered signal per filter.</p>
 </tr>
 </tbody>
 </table>
-<p>A Butterworth filter (see <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v0.15.1)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.butter()</span></code></a>) is used.</p>
+<p>A Butterworth filter is used.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v0.15.1)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.butter()</span></code></a>.</p>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -257,7 +265,11 @@ Returns a list consisting of a filtered signal per filter.</p>
 </tr>
 </tbody>
 </table>
-<p>A Butterworth filter (see <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v0.15.1)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.butter()</span></code></a>) is used.</p>
+<p>A Butterworth filter is used.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v0.15.1)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.butter()</span></code></a>.</p>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -313,6 +325,10 @@ In the case of a linear time-invariant (LTI) system, each column represents a ti
 In the time-variant case (LTV), every column can contain a unique impulse response, both in values as in size.</p>
 <p>This function assumes all impulse responses are of the same size. 
 The input matrix <code class="docutils literal"><span class="pre">ltv</span></code> thus represents the non-shifted version of the Toeplitz matrix.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-func docutils literal"><span class="pre">np.convolve()</span></code>, <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.convolve.html#scipy.signal.convolve" title="(in SciPy v0.15.1)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.convolve()</span></code></a> and <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.fftconvolve.html#scipy.signal.fftconvolve" title="(in SciPy v0.15.1)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.fftconvolve()</span></code></a> for convolution with LTI system.</p>
+</div>
 </dd></dl>
 
 </div>
@@ -330,7 +346,7 @@ The input matrix <code class="docutils literal"><span class="pre">ltv</span></co
 </tr>
 </tbody>
 </table>
-<p>When analysing broadband (filtered noise) signals it is common to normalise
+<p>When analysing broadband (filtered noise) signals it is common to normalize
 the windowed signal so that it has the same power as the un-windowed one.</p>
 <div class="math">
 \[S = \sqrt{\frac{\sum_{i=0}^N w_i^2}{N}}\]</div>
@@ -357,7 +373,11 @@ the windowed signal so that it has the same power as the un-windowed one.</p>
 </table>
 <div class="math">
 \[x_s(t) = x(t) / S\]</div>
-<p>where <span class="math">\(S\)</span> is the window scaling factor. See also <a class="reference internal" href="#acoustics.signal.window_scaling_factor" title="acoustics.signal.window_scaling_factor"><code class="xref py py-func docutils literal"><span class="pre">window_scaling_factor()</span></code></a>.</p>
+<p>where <span class="math">\(S\)</span> is the window scaling factor.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#acoustics.signal.window_scaling_factor" title="acoustics.signal.window_scaling_factor"><code class="xref py py-func docutils literal"><span class="pre">window_scaling_factor()</span></code></a>.</p>
+</div>
 </dd></dl>
 
 </div>
@@ -408,7 +428,7 @@ these amplitudes with <span class="math">\(\sqrt{2}\)</span>.</p>
 are used when presenting data as it is a measure of the power/energy in the signal.</p>
 <div class="math">
 \[S_{xx} (f_n) = \overline{X (f_n)} \cdot X (f_n)\]</div>
-<p>The auto-spectrum is double-sided. For a single-sided autospectrum, see <code class="xref py py-func docutils literal"><span class="pre">single_sided_auto_spectrum()</span></code>.</p>
+<p>The auto-spectrum is double-sided.</p>
 </dd></dl>
 
 <dl class="function">
@@ -431,6 +451,14 @@ are used when presenting data as it is a measure of the power/energy in the sign
 <p>The power spectrum, or single-sided autospectrum, contains the squared RMS amplitudes of the signal.</p>
 <p>A power spectrum is a spectrum with squared RMS values. The power spectrum is 
 calculated from the autospectrum of the signal.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Does not include scaling to reference value!</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#acoustics.signal.auto_spectrum" title="acoustics.signal.auto_spectrum"><code class="xref py py-func docutils literal"><span class="pre">auto_spectrum()</span></code></a></p>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -476,14 +504,14 @@ spectra on the other hand depend on the chosen frequency resolution.</p>
 <p>This function returns a single-sided wrapped phase angle spectrum.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-func docutils literal"><span class="pre">phase_spectrum()</span></code> for unwrapped phase spectrum.</p>
+<p class="last"><a class="reference internal" href="#acoustics.signal.phase_spectrum" title="acoustics.signal.phase_spectrum"><code class="xref py py-func docutils literal"><span class="pre">phase_spectrum()</span></code></a> for unwrapped phase spectrum.</p>
 </div>
 </dd></dl>
 
 <dl class="function">
-<dt>
-<code class="descclassname">acoustics.signal.</code><code class="descname">angle_spectrum</code><span class="sig-paren">(</span><em>x</em>, <em>fs</em>, <em>N=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/signal.html#angle_spectrum"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Phase angle spectrum of instantaneous signal <span class="math">\(x(t)\)</span>.</p>
+<dt id="acoustics.signal.phase_spectrum">
+<code class="descclassname">acoustics.signal.</code><code class="descname">phase_spectrum</code><span class="sig-paren">(</span><em>x</em>, <em>fs</em>, <em>N=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/signal.html#phase_spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.phase_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Phase spectrum of instantaneous signal <span class="math">\(x(t)\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -497,10 +525,10 @@ spectra on the other hand depend on the chosen frequency resolution.</p>
 </tr>
 </tbody>
 </table>
-<p>This function returns a single-sided wrapped phase angle spectrum.</p>
+<p>This function returns a single-sided unwrapped phase spectrum.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-func docutils literal"><span class="pre">phase_spectrum()</span></code> for unwrapped phase spectrum.</p>
+<p class="last"><a class="reference internal" href="#acoustics.signal.angle_spectrum" title="acoustics.signal.angle_spectrum"><code class="xref py py-func docutils literal"><span class="pre">angle_spectrum()</span></code></a> for wrapped phase angle.</p>
 </div>
 </dd></dl>
 

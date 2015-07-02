@@ -99,6 +99,10 @@ of noise and how the power and power density change per octave.</p>
 </tr>
 </tbody>
 </table>
+<p>The colored noise is created by generating pseudo-random numbers using
+<code class="xref py py-func docutils literal"><span class="pre">np.random.randn()</span></code> and then multiplying these with a curve tyical for the color.
+Afterwards, an inverse DFT is performed using <code class="xref py py-func docutils literal"><span class="pre">np.fft.irfft()</span></code>.
+Finally, the noise is normalized using <a class="reference internal" href="signal.html#acoustics.signal.normalize" title="acoustics.signal.normalize"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.normalize()</span></code></a>.</p>
 <div class="section" id="all-colors">
 <h3>All colors<a class="headerlink" href="#all-colors" title="Permalink to this headline">¶</a></h3>
 <dl class="function">

@@ -128,7 +128,7 @@ values are according to the respective standard.</p>
 </table>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.angle_spectrum" title="acoustics.signal.angle_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.angle_spectrum()</span></code></a>, <code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.phase_spectrum()</span></code> and <a class="reference internal" href="#acoustics.Signal.phase_spectrum" title="acoustics.Signal.phase_spectrum"><code class="xref py py-meth docutils literal"><span class="pre">phase_spectrum()</span></code></a>.</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.angle_spectrum" title="acoustics.signal.angle_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.angle_spectrum()</span></code></a>, <a class="reference internal" href="signal.html#acoustics.signal.phase_spectrum" title="acoustics.signal.phase_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.phase_spectrum()</span></code></a> and <a class="reference internal" href="#acoustics.Signal.phase_spectrum" title="acoustics.Signal.phase_spectrum"><code class="xref py py-meth docutils literal"><span class="pre">phase_spectrum()</span></code></a>.</p>
 </div>
 </dd></dl>
 
@@ -362,7 +362,7 @@ By default a 6 decibel gap is used.</p>
 </table>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.phase_spectrum()</span></code>, <a class="reference internal" href="signal.html#acoustics.signal.angle_spectrum" title="acoustics.signal.angle_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.angle_spectrum()</span></code></a> and <a class="reference internal" href="#acoustics.Signal.angle_spectrum" title="acoustics.Signal.angle_spectrum"><code class="xref py py-meth docutils literal"><span class="pre">angle_spectrum()</span></code></a>.</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.phase_spectrum" title="acoustics.signal.phase_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.phase_spectrum()</span></code></a>, <a class="reference internal" href="signal.html#acoustics.signal.angle_spectrum" title="acoustics.signal.angle_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.angle_spectrum()</span></code></a> and <a class="reference internal" href="#acoustics.Signal.angle_spectrum" title="acoustics.Signal.angle_spectrum"><code class="xref py py-meth docutils literal"><span class="pre">angle_spectrum()</span></code></a>.</p>
 </div>
 </dd></dl>
 
@@ -586,13 +586,17 @@ By default a 6 decibel gap is used.</p>
 <dl class="method">
 <dt id="acoustics.Signal.spectrogram">
 <code class="descname">spectrogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.spectrogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot spectrograms of the signals.</p>
+<dd><p>Plot spectrogram of the signal.</p>
 <p>Valid kwargs:</p>
 <ul class="simple">
 <li>xlim</li>
 <li>ylim</li>
 <li>clim</li>
 </ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method only works for a single channel.</p>
+</div>
 </dd></dl>
 
 <dl class="method">

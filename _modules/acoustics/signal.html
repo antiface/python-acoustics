@@ -85,7 +85,7 @@
 <span class="sd">.. autofunction:: power_spectrum</span>
 <span class="sd">.. autofunction:: density_spectrum</span>
 <span class="sd">.. autofunction:: angle_spectrum</span>
-<span class="sd">.. autofunction:: angle_spectrum</span>
+<span class="sd">.. autofunction:: phase_spectrum</span>
 
 <span class="sd">Frequency bands</span>
 <span class="sd">***************</span>
@@ -156,7 +156,9 @@
 <span class="sd">    :param fs: Sample frequency</span>
 <span class="sd">    :param order: Filter order</span>
 <span class="sd">    </span>
-<span class="sd">    A Butterworth filter (see :func:`scipy.signal.butter`) is used.</span>
+<span class="sd">    A Butterworth filter is used.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso:: :func:`scipy.signal.butter`.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nyq</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">fs</span>
@@ -175,13 +177,9 @@
 <span class="sd">    :param fs: Sample frequency</span>
 <span class="sd">    :param order: Filter order</span>
 <span class="sd">    </span>
-<span class="sd">    .. seealso:: :func:`bandpass_filter`</span>
+<span class="sd">    .. seealso:: :func:`bandpass_filter` for the filter that is used.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c">#nyq = 0.5 * fs</span>
-    <span class="c">#low = lowcut / nyq</span>
-    <span class="c">#high = highcut / nyq</span>
-    <span class="c">#b, a = butter(order, [low, high], btype=&#39;band&#39;)</span>
     <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">bandpass_filter</span><span class="p">(</span><span class="n">lowcut</span><span class="p">,</span> <span class="n">highcut</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">lfilter</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
     
@@ -194,7 +192,9 @@
 <span class="sd">    :param cutoff: Cut-off frequency</span>
 <span class="sd">    :param order: Filter order</span>
 <span class="sd">    </span>
-<span class="sd">    A Butterworth filter (see :func:`scipy.signal.butter`) is used.</span>
+<span class="sd">    A Butterworth filter is used.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso:: :func:`scipy.signal.butter`.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">/</span><span class="p">(</span><span class="n">fs</span><span class="o">/</span><span class="mf">2.0</span><span class="p">),</span> <span class="n">btype</span><span class="o">=</span><span class="s">&#39;low&#39;</span><span class="p">)</span>
@@ -209,7 +209,9 @@
 <span class="sd">    :param cutoff: Cut-off frequency</span>
 <span class="sd">    :param order: Filter order</span>
 <span class="sd">    </span>
-<span class="sd">    A Butterworth filter (see :func:`scipy.signal.butter`) is used.</span>
+<span class="sd">    A Butterworth filter is used.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso:: :func:`scipy.signal.butter`.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">/</span><span class="p">(</span><span class="n">fs</span><span class="o">/</span><span class="mf">2.0</span><span class="p">),</span> <span class="n">btype</span><span class="o">=</span><span class="s">&#39;high&#39;</span><span class="p">)</span>
@@ -269,6 +271,8 @@
 <span class="sd">    </span>
 <span class="sd">    This function assumes all impulse responses are of the same size. </span>
 <span class="sd">    The input matrix ``ltv`` thus represents the non-shifted version of the Toeplitz matrix.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso:: :func:`np.convolve`, :func:`scipy.signal.convolve` and :func:`scipy.signal.fftconvolve` for convolution with LTI system.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
@@ -609,7 +613,7 @@
 <span class="sd">    </span>
 <span class="sd">    :param window: Window.</span>
 <span class="sd">    </span>
-<span class="sd">    When analysing broadband (filtered noise) signals it is common to normalise</span>
+<span class="sd">    When analysing broadband (filtered noise) signals it is common to normalize</span>
 <span class="sd">    the windowed signal so that it has the same power as the un-windowed one.</span>
 
 <span class="sd">    .. math:: S = \\sqrt{\\frac{\\sum_{i=0}^N w_i^2}{N}}</span>
@@ -629,7 +633,9 @@
 <span class="sd">    </span>
 <span class="sd">    .. math:: x_s(t) = x(t) / S</span>
 <span class="sd">    </span>
-<span class="sd">    where :math:`S` is the window scaling factor. See also :func:`window_scaling_factor`.</span>
+<span class="sd">    where :math:`S` is the window scaling factor. </span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso:: :func:`window_scaling_factor`.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">window_scaling_factor</span><span class="p">(</span><span class="n">window</span><span class="p">)</span> <span class="c"># Determine window scaling factor.</span>
@@ -676,7 +682,7 @@
 
 <span class="sd">    .. math:: S_{xx} (f_n) = \\overline{X (f_n)} \\cdot X (f_n)</span>
 
-<span class="sd">    The auto-spectrum is double-sided. For a single-sided autospectrum, see :func:`single_sided_auto_spectrum`.</span>
+<span class="sd">    The auto-spectrum is double-sided.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">f</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">amplitude_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
@@ -695,6 +701,11 @@
 <span class="sd">    </span>
 <span class="sd">    A power spectrum is a spectrum with squared RMS values. The power spectrum is </span>
 <span class="sd">    calculated from the autospectrum of the signal.</span>
+<span class="sd">    </span>
+<span class="sd">    .. warning:: Does not include scaling to reference value!</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso:: :func:`auto_spectrum`</span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">N</span> <span class="o">=</span> <span class="n">N</span> <span class="k">if</span> <span class="n">N</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">f</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">auto_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
@@ -728,7 +739,7 @@
     <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">a</span>
 
 </div>
-<span class="k">def</span> <span class="nf">phase_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="phase_spectrum"><a class="viewcode-back" href="../../signal.html#acoustics.signal.phase_spectrum">[docs]</a><span class="k">def</span> <span class="nf">phase_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Phase spectrum of instantaneous signal :math:`x(t)`.</span>
 <span class="sd">    </span>
@@ -762,7 +773,7 @@
     <span class="c">#returns f, power, phase</span>
     
 
-  
+  </div>
 <div class="viewcode-block" id="density_spectrum"><a class="viewcode-back" href="../../signal.html#acoustics.signal.density_spectrum">[docs]</a><span class="k">def</span> <span class="nf">density_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Density spectrum of instantaneous signal :math:`x(t)`.</span>
@@ -913,7 +924,7 @@
 <span class="sd">    Fractional-Octave filter bank.</span>
 <span class="sd">    </span>
 <span class="sd">    </span>
-<span class="sd">    .. note:: For high frequencies the filter coefficients are wrong for low frequencies. Therefore, to improve the response for lower frequencies the signal should be downsampled. Currently, there is no easy way to do so within the Filterbank.</span>
+<span class="sd">    .. warning:: For high frequencies the filter coefficients are wrong for low frequencies. Therefore, to improve the response for lower frequencies the signal should be downsampled. Currently, there is no easy way to do so within the Filterbank.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
